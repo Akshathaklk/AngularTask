@@ -1,0 +1,50 @@
+
+const renderPosts = async (e) => {
+    let uri = 'http://localhost:3000/contacts';
+
+    const res = await fetch(uri);
+    const contacts = await res.json();
+
+    let template = '';
+    contacts.forEach(contact => {
+        template +=`
+        <div>
+        <h2>${contact.first_name}</h2>
+        <a href="/address.html?id=${contact.id}">Read more</a>
+
+        </div>
+        `
+         
+    });
+}
+var employeeAppModule = angular.module("employeeApp", []);    
+ employeeAppModule.controller("employeeCtrl", function ($scope,$http) {    
+   $http.get('db.json')    
+   .success(function(data){    
+     $scope.employees = data;    
+   })    
+   .error(function(data,status){    
+     console.error('Fail to load data', status, data);    
+     $scope.employees = { };     
+   });    
+ });
+window.addEventListener('DOMContentLoaded', renderPosts);
+
+ const form = document.querySelector('form');
+
+const createPost = async (e) => {
+  e.preventDefault();
+
+  const doc = {
+   first_name: form.firstName.value,
+     }
+   await fetch('http://localhost:3000/contacts', {
+     method: 'POST',
+    body: JSON.stringify(doc),
+    headers: { 'Content-Type': 'application/json' }
+  })
+
+window.location.replace('/')
+}
+
+form.addEventListener('submit', createPost);
